@@ -1,1 +1,1 @@
-# virtual-item-store-api
+# Virtual Item Store API
