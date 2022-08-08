@@ -1,36 +1,44 @@
-package com.app.backend.model;
+package com.app.backend.models;
 
-import lombok.*;
+import com.app.backend.enums.TransactionStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.UUID;
 
-@Data
 @Entity
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class Product {
+public class Transaction {
 
     @Id
     @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID id;
     @ManyToOne
     @JoinColumn(referencedColumnName = "id")
-    private User user;
-    private String name;
+    private User buyer;
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "id")
+    private User seller;
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "id")
+    private Product product;
     private Double price;
-    private Double discount;
-    private Boolean isActive;
+    private TransactionStatus status;
     private Date createdAt;
     private Date lastUpdateDate;
 
     @PrePersist
-    protected void onCreate(){
+    public void onCreate(){
         this.setId(UUID.randomUUID());
-        this.setIsActive(true);
         this.setCreatedAt(new Date(System.currentTimeMillis()));
     }
+
 }

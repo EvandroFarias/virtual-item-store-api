@@ -1,4 +1,4 @@
-package com.app.backend.model;
+package com.app.backend.models;
 
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;

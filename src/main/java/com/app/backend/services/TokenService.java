@@ -1,6 +1,6 @@
-package com.app.backend.service;
+package com.app.backend.services;
 
-import com.app.backend.dto.user.UserLoginDTO;
+import com.app.backend.dtos.user.UserLoginDTO;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.stereotype.Service;
