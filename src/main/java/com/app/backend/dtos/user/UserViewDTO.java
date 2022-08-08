@@ -1,6 +1,6 @@
-package com.app.backend.dto.user;
+package com.app.backend.dtos.user;
 
-import com.app.backend.model.User;
+import com.app.backend.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

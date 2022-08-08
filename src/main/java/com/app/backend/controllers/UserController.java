@@ -1,16 +1,17 @@
-package com.app.backend.controller;
+package com.app.backend.controllers;
 
-import com.app.backend.dto.user.UserCreationDTO;
-import com.app.backend.dto.user.UserLoginDTO;
-import com.app.backend.dto.user.UserViewDTO;
-import com.app.backend.service.UserService;
+import com.app.backend.customException.AlreadyRegisteredException;
+import com.app.backend.customException.RedundancyExcpetion;
+import com.app.backend.dtos.user.UserCreationDTO;
+import com.app.backend.dtos.user.UserLoginDTO;
+import com.app.backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @RestController
@@ -35,28 +36,37 @@ public class UserController {
         try {
             userDto.setPassword(passwordEncoder
                     .encode(userDto.getPassword()));
-            return new ResponseEntity<>(userService.register(UserCreationDTO.dtoToModel(userDto)),
-                    HttpStatus.CREATED);
+            return ResponseEntity.status(201)
+                    .body(userService.register(UserCreationDTO.dtoToModel(userDto)));
+        } catch (AlreadyRegisteredException | IllegalArgumentException ex) {
+            return ResponseEntity.status(400).body(ex.getMessage());
         } catch (Exception ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(500).body(ex.getMessage());
         }
     }
 
     @GetMapping(path = "/activate")
     public ResponseEntity<?> activateUser(@RequestParam(value = "user") UUID userId) {
         try {
-            return new ResponseEntity<>(userService.activateUser(userId), HttpStatus.OK);
+            return ResponseEntity.status(200)
+                    .body(userService.activateUser(userId));
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.status(404).body(ex.getMessage());
+        }  catch (RedundancyExcpetion ex) {
+            return ResponseEntity.status(400).body(ex.getMessage());
         } catch (Exception ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(500).body(ex.getMessage());
         }
     }
 
     @PostMapping(path = "/login")
     public ResponseEntity<?> login(@RequestBody UserLoginDTO userLoginDTO) {
         try {
-            return new ResponseEntity<>(userService.login(userLoginDTO), HttpStatus.OK);
+            return ResponseEntity.status(200).body(userService.login(userLoginDTO));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(401).body(ex.getMessage());
         } catch (Exception ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(500).body(ex.getMessage());
         }
     }
 

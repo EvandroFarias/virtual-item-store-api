@@ -1,7 +1,7 @@
-package com.app.backend.dto.product;
+package com.app.backend.dtos.product;
 
 
-import com.app.backend.model.Product;
+import com.app.backend.models.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +16,6 @@ public class ProductCreationDTO {
     private String name;
     private Double price;
     private Double discount;
-
 
     public static Product dtoToModel(ProductCreationDTO dto){
         if(dto == null) return null;
