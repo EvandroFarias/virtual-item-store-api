@@ -7,7 +7,6 @@ import com.app.backend.services.ProductService;
 import com.app.backend.services.TokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +28,7 @@ public class ProductController {
                                     HttpServletRequest request) {
         log.info("Reached Product Controller endpoint");
         try {
-            if (TokenService.validToken(request.getHeader("TOKEN"))) {
+            if (TokenService.isValidToken(request.getHeader("TOKEN"))) {
                 return ResponseEntity
                         .status(201)
                         .body(productService.create(ProductCreationDTO.dtoToModel(productDto), userId));
@@ -50,7 +49,7 @@ public class ProductController {
                                     HttpServletRequest request) {
         log.info("Reached Product Controller endpoint");
         try {
-            if (TokenService.validToken(request.getHeader("TOKEN"))) {
+            if (TokenService.isValidToken(request.getHeader("TOKEN"))) {
                 return ResponseEntity.status(200).body(productService.update(productId, product));
             }
             return ResponseEntity.status(403).body("Token Expired");
@@ -71,7 +70,7 @@ public class ProductController {
                                     HttpServletRequest request) {
         log.info("Reached Product Controller endpoint");
         try {
-            if (TokenService.validToken(request.getHeader("TOKEN"))) {
+            if (TokenService.isValidToken(request.getHeader("TOKEN"))) {
                 return ResponseEntity.status(200).body(productService.delete(productId));
             }
             return ResponseEntity.status(403).body("Token Expired");
@@ -90,7 +89,7 @@ public class ProductController {
             HttpServletRequest request) {
         log.info("Reached Product Controller endpoint");
 
-        if (userId != null && TokenService.validToken(request.getHeader("TOKEN"))) {
+        if (userId != null && TokenService.isValidToken(request.getHeader("TOKEN"))) {
             try {
                 return ResponseEntity.status(200).body(productService.findByUser(userId));
             } catch (Exception ex) {
@@ -98,7 +97,7 @@ public class ProductController {
             }
         } else {
             try {
-                if (TokenService.validToken(request.getHeader("TOKEN"))) {
+                if (TokenService.isValidToken(request.getHeader("TOKEN"))) {
                     return ResponseEntity.status(200).body(productService.getAll());
                 }
                 return ResponseEntity.status(403).body("Token Expired");
