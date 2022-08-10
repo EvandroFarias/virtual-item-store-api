@@ -84,7 +84,7 @@ public class TransactionService {
             throw e;
         }
     }
-
+    
     @Transactional
     private TransactionViewDTO approveTransaction(User seller, Transaction transaction){
         try {
