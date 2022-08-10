@@ -20,7 +20,7 @@ public class TokenService{
                 .sign(Algorithm.HMAC512(TOKEN_SECRET));
     }
 
-    public static boolean validToken(String token){
+    public static boolean isValidToken(String token){
         if(token == null) return false;
 
         long nowDate = new Date(System.currentTimeMillis()).getTime();
