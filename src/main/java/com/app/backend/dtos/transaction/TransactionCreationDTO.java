@@ -1,8 +1,5 @@
 package com.app.backend.dtos.transaction;
 
-import com.app.backend.models.Product;
-import com.app.backend.models.Transaction;
-import com.app.backend.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

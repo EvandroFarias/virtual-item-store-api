@@ -50,7 +50,6 @@ public class UserService {
 
             userRepository.save(user);
             return UserViewDTO.modelToDto(user);
-//          return "Activate your account on: http://localhost:8080/api/v1/user/activate?user="+user.getId();
 
         } catch (Exception e) {
             log.error("Error creating user at User Service");

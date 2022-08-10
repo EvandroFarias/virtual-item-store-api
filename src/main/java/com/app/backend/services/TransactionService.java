@@ -31,7 +31,10 @@ public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
 
-
+/* *
+*
+*
+* */
     public TransactionViewDTO proposeTransaction(TransactionCreationDTO transactionCreationDTO) throws Exception {
 
         try {
@@ -84,7 +87,7 @@ public class TransactionService {
             throw e;
         }
     }
-    
+
     @Transactional
     private TransactionViewDTO approveTransaction(User seller, Transaction transaction){
         try {
