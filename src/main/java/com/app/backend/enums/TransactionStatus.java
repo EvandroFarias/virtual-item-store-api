@@ -10,7 +10,6 @@ public enum TransactionStatus {
     public final String label;
 
     TransactionStatus(String label){
-
         this.label = label;
     }
 }

@@ -31,6 +31,7 @@ public class Transaction {
     @JoinColumn(referencedColumnName = "id")
     private Product product;
     private Double price;
+    @Enumerated(EnumType.STRING)
     private TransactionStatus status;
     private Date createdAt;
     private Date lastUpdateDate;

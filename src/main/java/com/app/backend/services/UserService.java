@@ -1,6 +1,7 @@
 package com.app.backend.services;
 
 import com.app.backend.customException.AlreadyRegisteredException;
+import com.app.backend.customException.NotActiveException;
 import com.app.backend.customException.RedundancyExcpetion;
 import com.app.backend.dtos.user.UserLoginDTO;
 import com.app.backend.dtos.user.UserViewDTO;
@@ -82,6 +83,9 @@ public class UserService {
             if (user == null) throw new IllegalArgumentException("User name or password doesn't match");
             if (!passwordEncoder.matches(userLoginDTO.getPassword(), user.getPassword())) {
                 throw new IllegalArgumentException("User name or password doesn't match");
+            }
+            if(!user.getIsActive()){
+                throw new NotActiveException("User is not active");
             }
 
             return TokenService.returnToken(userLoginDTO);

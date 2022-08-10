@@ -5,6 +5,7 @@ import com.app.backend.dtos.product.ProductCreationDTO;
 import com.app.backend.models.Product;
 import com.app.backend.services.ProductService;
 import com.app.backend.services.TokenService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/product")
 public class ProductController {
@@ -25,6 +27,7 @@ public class ProductController {
     public ResponseEntity<?> create(@RequestBody ProductCreationDTO productDto,
                                     @RequestParam("userId") UUID userId,
                                     HttpServletRequest request) {
+        log.info("Reached Product Controller endpoint");
         try {
             if (TokenService.validToken(request.getHeader("TOKEN"))) {
                 return ResponseEntity
@@ -45,7 +48,7 @@ public class ProductController {
     public ResponseEntity<?> update(@RequestParam("productId") UUID productId,
                                     Product product,
                                     HttpServletRequest request) {
-
+        log.info("Reached Product Controller endpoint");
         try {
             if (TokenService.validToken(request.getHeader("TOKEN"))) {
                 return ResponseEntity.status(200).body(productService.update(productId, product));
@@ -66,6 +69,7 @@ public class ProductController {
     @PatchMapping("/delete")
     public ResponseEntity<?> delete(@RequestParam("productId") UUID productId,
                                     HttpServletRequest request) {
+        log.info("Reached Product Controller endpoint");
         try {
             if (TokenService.validToken(request.getHeader("TOKEN"))) {
                 return ResponseEntity.status(200).body(productService.delete(productId));
@@ -84,6 +88,7 @@ public class ProductController {
     public ResponseEntity<?> findAllOrFindById(
             @RequestParam(value = "userId", required = false) UUID userId,
             HttpServletRequest request) {
+        log.info("Reached Product Controller endpoint");
 
         if (userId != null && TokenService.validToken(request.getHeader("TOKEN"))) {
             try {
