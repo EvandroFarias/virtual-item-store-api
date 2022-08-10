@@ -16,11 +16,9 @@ import com.app.backend.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -34,7 +32,7 @@ public class TransactionService {
     private TransactionRepository transactionRepository;
 
 
-    public TransactionViewDTO registerTransaction(TransactionCreationDTO transactionCreationDTO) throws Exception {
+    public TransactionViewDTO proposeTransaction(TransactionCreationDTO transactionCreationDTO) throws Exception {
 
         try {
             User buyer = userRepository.findById(transactionCreationDTO.getBuyerId()).orElse(null);
@@ -66,13 +64,31 @@ public class TransactionService {
 
     }
 
-    public TransactionViewDTO acceptTransaction(UUID sellerId, UUID transactionId) throws Exception {
+    public TransactionViewDTO proccessTransaction(UUID sellerId, UUID transactionId, String action) throws Exception {
         try {
             User seller = userRepository.findById(sellerId).orElse(null);
             Transaction transaction = transactionRepository.findById(transactionId).orElse(null);
-            User buyer = transaction.getBuyer();
 
-            this.isValidTransactionAcceptance(transaction, seller);
+            this.isValidTransactionProccess(transaction, seller, action);
+
+            if(action.equalsIgnoreCase("APPROVE")){
+                return this.approveTransaction(seller, transaction);
+            }
+            if(action.equalsIgnoreCase("REJECT")){
+                return this.rejectTransaction(transaction);
+            }
+            throw new IllegalArgumentException("Invalid status");
+        } catch (Exception e) {
+            log.error("Error accepting transaction at Transaction Service");
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    @Transactional
+    private TransactionViewDTO approveTransaction(User seller, Transaction transaction){
+        try {
+            User buyer = transaction.getBuyer();
 
             if (buyer.getBalance() < transaction.getPrice()) {
                 transaction.setStatus(TransactionStatus.REJECTED);
@@ -82,8 +98,8 @@ public class TransactionService {
                 seller.setBalance(seller.getBalance() + price);
                 transaction.setStatus(TransactionStatus.APPROVED);
 
-                userRepository.save(buyer);
-                userRepository.save(seller);
+
+                userRepository.saveAll(Arrays.asList(buyer, seller));
             }
 
             transaction.setLastUpdateDate(new Date(System.currentTimeMillis()));
@@ -95,6 +111,21 @@ public class TransactionService {
             e.printStackTrace();
             throw e;
         }
+    }
+
+    @Transactional
+    private TransactionViewDTO rejectTransaction(Transaction transaction){
+        try {
+
+            transaction.setStatus(TransactionStatus.REJECTED);
+            transaction.setLastUpdateDate(new Date(System.currentTimeMillis()));
+            return TransactionViewDTO.modelToDto(transactionRepository.save(transaction));
+        } catch (Exception e){
+            log.error("Error accepting transaction at Transaction Service");
+            e.printStackTrace();
+            throw e;
+        }
+
     }
 
     private void isValidTransactionCreation(User buyer, User seller, Product product) throws Exception {
@@ -122,19 +153,22 @@ public class TransactionService {
         }
     }
 
-    public void isValidTransactionAcceptance(Transaction transaction, User seller) throws Exception {
+    private void isValidTransactionProccess(Transaction transaction, User seller, String action) throws Exception {
 
+        if(action == null){
+            throw new IllegalArgumentException("Status must be provided");
+        }
         if (transaction == null) {
             throw new NoSuchElementException("Transaction not found");
         }
         if (seller == null) {
             throw new NoSuchElementException("User not found");
         }
+        if(transaction.getBuyer() == null){
+            throw new NoSuchElementException("Buyer not found");
+        }
         if (transaction.getSeller() != seller) {
             throw new IllegalArgumentException("Incorrect seller for the transaction");
-        }
-        if (transaction.getStatus() == TransactionStatus.APPROVED) {
-            throw new UnreachableTransactionException("Transaction have already been approved");
         }
         if (transaction.getStatus() != TransactionStatus.PENDING) {
             throw new UnreachableTransactionException("Transaction status doesn't qualify for approval");

@@ -4,6 +4,7 @@ import com.app.backend.customException.PendingTransactionException;
 import com.app.backend.customException.RedundancyExcpetion;
 import com.app.backend.customException.UnreachableTransactionException;
 import com.app.backend.dtos.transaction.TransactionCreationDTO;
+import com.app.backend.dtos.transaction.TransactionViewDTO;
 import com.app.backend.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +18,14 @@ import java.util.UUID;
 @RequestMapping(value = "/transaction")
 public class TransactionController {
 
-    private final Boolean bulean = true;
     @Autowired
     private TransactionService transactionService;
 
-    @PostMapping("/create")
-    public ResponseEntity<Object> registerTransaction(@RequestBody TransactionCreationDTO transactionCreationDTO) {
+    @PostMapping("/propose")
+    public ResponseEntity<Object> proposeTransaction(@RequestBody TransactionCreationDTO transactionCreationDTO) {
         try {
             return ResponseEntity.ok()
-                    .body(transactionService.registerTransaction(transactionCreationDTO));
+                    .body(transactionService.proposeTransaction(transactionCreationDTO));
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(404)
                     .body(e.getMessage());
@@ -42,12 +42,13 @@ public class TransactionController {
         }
     }
 
-    @PatchMapping("/accept/{seller}")
-    public ResponseEntity<Object> acceptTransaction(@RequestParam("transaction") UUID transactionId,
-                                                    @PathVariable("seller") UUID sellerId) {
+    @PatchMapping("/proccess/{seller}")
+    public ResponseEntity<Object> proccessTransaction(@RequestParam("transaction") UUID transactionId,
+                                                      @RequestParam("status") String action,
+                                                      @PathVariable("seller") UUID sellerId) {
         try {
             return ResponseEntity.ok()
-                    .body(transactionService.acceptTransaction(sellerId, transactionId));
+                    .body(transactionService.proccessTransaction(sellerId, transactionId, action));
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(404)
                     .body(e.getMessage());
