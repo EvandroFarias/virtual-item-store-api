@@ -42,7 +42,7 @@ public class TransactionController {
         }
     }
 
-    @PatchMapping("/proccess/{sellerr}")
+    @PatchMapping("/proccess/{seller}")
     public ResponseEntity<Object> proccessTransaction(@RequestParam("transaction") UUID transactionId,
                                                       @RequestParam("status") String action,
                                                       @PathVariable("seller") UUID sellerId) {
