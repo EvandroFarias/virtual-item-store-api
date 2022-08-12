@@ -5,6 +5,8 @@ import com.app.backend.dtos.product.ProductCreationDTO;
 import com.app.backend.models.Product;
 import com.app.backend.services.ProductService;
 import com.app.backend.services.TokenService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +19,14 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequestMapping(value = "/product")
+@Api(value = "Manage products")
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
     @PostMapping("/create")
+    @ApiOperation(value = "Create a product.")
     public ResponseEntity<?> create(@RequestBody ProductCreationDTO productDto,
                                     @RequestParam("userId") UUID userId,
                                     HttpServletRequest request) {
@@ -44,6 +48,7 @@ public class ProductController {
     }
 
     @PatchMapping("/update")
+    @ApiOperation(value = "Updates a product.")
     public ResponseEntity<?> update(@RequestParam("productId") UUID productId,
                                     Product product,
                                     HttpServletRequest request) {
@@ -66,6 +71,7 @@ public class ProductController {
     }
 
     @PatchMapping("/delete")
+    @ApiOperation(value = "Deletes a product.", httpMethod = "DELETE")
     public ResponseEntity<?> delete(@RequestParam("productId") UUID productId,
                                     HttpServletRequest request) {
         log.info("Reached Product Controller endpoint");
@@ -84,6 +90,7 @@ public class ProductController {
     }
 
     @GetMapping()
+    @ApiOperation(value = "Get one product if no user id is passed as a parameter, if so then returns only the products owned by that user.")
     public ResponseEntity<?> findAllOrFindById(
             @RequestParam(value = "userId", required = false) UUID userId,
             HttpServletRequest request) {

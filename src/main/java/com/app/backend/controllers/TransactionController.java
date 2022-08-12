@@ -6,6 +6,7 @@ import com.app.backend.customException.UnreachableTransactionException;
 import com.app.backend.dtos.transaction.TransactionCreationDTO;
 import com.app.backend.services.TokenService;
 import com.app.backend.services.TransactionService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ public class TransactionController {
     private TransactionService transactionService;
 
     @PostMapping("/propose")
+    @ApiOperation(value = "Creates a transaction on pending status. If buyer has no balance, then auto-rejects.")
     public ResponseEntity<Object> proposeTransaction(@RequestBody TransactionCreationDTO transactionCreationDTO) {
         try {
             return ResponseEntity.ok()
@@ -44,6 +46,7 @@ public class TransactionController {
     }
 
     @PatchMapping("/proccess/{seller}")
+    @ApiOperation(value = "Proccesses the transaction by parameter action, it can be either reject or approve.")
     public ResponseEntity<Object> proccessTransaction(@RequestParam("transaction") UUID transactionId,
                                                       @RequestParam("status") String action,
                                                       @PathVariable("seller") UUID sellerId,
@@ -65,6 +68,4 @@ public class TransactionController {
                     .body(e.getMessage());
         }
     }
-
-
 }

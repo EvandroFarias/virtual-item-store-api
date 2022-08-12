@@ -5,6 +5,7 @@ import com.app.backend.customException.RedundancyExcpetion;
 import com.app.backend.dtos.user.UserCreationDTO;
 import com.app.backend.dtos.user.UserLoginDTO;
 import com.app.backend.services.UserService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ public class UserController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping()
+    @ApiOperation(value = "Returns user information.")
     public ResponseEntity<Object> getUser(@RequestBody UserLoginDTO userLoginDTO){
         if(userService.getUser(userLoginDTO) == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
@@ -32,6 +34,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getUser(userLoginDTO));
     }
     @PostMapping(path = "/register")
+    @ApiOperation(value = "Creates an user.")
     public ResponseEntity<?> register(@RequestBody UserCreationDTO userDto) {
         try {
             userDto.setPassword(passwordEncoder
@@ -46,6 +49,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/activate")
+    @ApiOperation(value = "Activate an user.")
     public ResponseEntity<?> activateUser(@RequestParam(value = "user") UUID userId) {
         try {
             return ResponseEntity.status(200)
@@ -60,6 +64,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/login")
+    @ApiOperation(value = "Returns a JWT if login succeeded.")
     public ResponseEntity<?> login(@RequestBody UserLoginDTO userLoginDTO) {
         try {
             return ResponseEntity.status(200).body(userService.login(userLoginDTO));
@@ -71,6 +76,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/check/{email}")
+    @ApiOperation(value = "Verify if the email passed is already in use.")
     public ResponseEntity<?> checkEmail(@PathVariable("email") String email){
         return ResponseEntity.ok(userService.checkEmail(email));
     }
