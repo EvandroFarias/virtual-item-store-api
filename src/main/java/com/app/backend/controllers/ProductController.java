@@ -71,7 +71,7 @@ public class ProductController {
     }
 
     @PatchMapping("/delete")
-    @ApiOperation(value = "Deletes a product.", httpMethod = "DELETE")
+    @ApiOperation(value = "Deletes a product.")
     public ResponseEntity<?> delete(@RequestParam("productId") UUID productId,
                                     HttpServletRequest request) {
         log.info("Reached Product Controller endpoint");
