@@ -12,7 +12,7 @@ import java.io.IOException;
 @Slf4j
 @RestController
 @RequestMapping()
-@Api(hidden = true)
+@Api(value = "Redirect Controller", hidden = true)
 public class SwaggerRedirectionController {
 
     @GetMapping
