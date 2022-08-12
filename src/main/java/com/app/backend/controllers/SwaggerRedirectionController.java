@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -12,7 +13,8 @@ import java.io.IOException;
 @Slf4j
 @RestController
 @RequestMapping()
-@Api(value = "Redirect Controller", hidden = true)
+@Api(value = "Redirect Controller")
+@ApiIgnore()
 public class SwaggerRedirectionController {
 
     @GetMapping
