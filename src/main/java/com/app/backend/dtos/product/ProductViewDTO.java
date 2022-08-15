@@ -31,7 +31,7 @@ public class ProductViewDTO {
                 .price(product.getPrice())
                 .discount(product.getDiscount())
                 .createdAt(product.getCreatedAt())
-                .lastUpdateDate(product.getCreatedAt())
+                .lastUpdateDate(product.getLastUpdateDate())
                 .build();
     }
 }
