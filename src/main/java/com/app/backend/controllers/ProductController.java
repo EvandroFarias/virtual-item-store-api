@@ -50,12 +50,12 @@ public class ProductController {
     @PatchMapping("/update")
     @ApiOperation(value = "Updates a product.")
     public ResponseEntity<?> update(@RequestParam("productId") UUID productId,
-                                    Product product,
+                                    @RequestBody ProductCreationDTO productDto,
                                     HttpServletRequest request) {
         log.info("Reached Product Controller endpoint");
         try {
             if (TokenService.isValidToken(request.getHeader("TOKEN"))) {
-                return ResponseEntity.status(200).body(productService.update(productId, product));
+                return ResponseEntity.status(200).body(productService.update(productId, ProductCreationDTO.dtoToModel(productDto)));
             }
             return ResponseEntity.status(403).body("Token Expired");
         } catch (NoSuchElementException ex) {
