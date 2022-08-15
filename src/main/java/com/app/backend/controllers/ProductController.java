@@ -50,7 +50,7 @@ public class ProductController {
     @PatchMapping("/update")
     @ApiOperation(value = "Updates a product.")
     public ResponseEntity<?> update(@RequestParam("productId") UUID productId,
-                                    ProductCreationDTO productDto,
+                                    @RequestBody ProductCreationDTO productDto,
                                     HttpServletRequest request) {
         log.info("Reached Product Controller endpoint");
         try {
