@@ -5,9 +5,13 @@ import com.app.backend.customException.RedundancyExcpetion;
 import com.app.backend.dtos.user.UserCreationDTO;
 import com.app.backend.dtos.user.UserLoginDTO;
 import com.app.backend.services.UserService;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiOperation;
+import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -81,4 +85,18 @@ public class UserController {
         return ResponseEntity.ok(userService.checkEmail(email));
     }
 
+    @PostMapping(path = "/balance",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @ApiOperation(value = "Adds balance to the user")
+    public ResponseEntity<?> addBalance(@RequestParam(value = "user") UUID userId,
+                                        @RequestBody Double amount){
+        try {
+            return ResponseEntity.ok(userService.addBalance(userId, amount));
+        } catch (NoSuchElementException ex){
+            return  ResponseEntity.status(404).body(ex.getMessage());
+        } catch (Exception ex){
+            return ResponseEntity.status(500).body(ex.getMessage());
+        }
+    }
 }

@@ -96,6 +96,21 @@ public class UserService {
 
     }
 
+    public UserViewDTO addBalance(UUID userId,Double amount) {
+        try {
+            User user = userRepository.findById(userId).orElse(null);
+            if(user == null){
+                throw new NoSuchElementException("User not found");
+            }
+            user.setBalance(user.getBalance() + amount);
+            return UserViewDTO.modelToDto(userRepository.save(user));
+        } catch (Exception e){
+            log.error("Error adding balance to user at User Service");
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
     public boolean checkEmail(String email) {
         return userRepository.existsByEmail(email);
     }
@@ -124,4 +139,5 @@ public class UserService {
             throw new RedundancyExcpetion("User already activated");
         }
     }
+
 }
