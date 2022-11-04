@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/api/v1/user")
 public class UserController {
 
     @Autowired

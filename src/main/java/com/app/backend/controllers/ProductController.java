@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/product")
+@RequestMapping(value = "/api/v1/product")
 @Api(value = "Manage products")
 public class ProductController {
 

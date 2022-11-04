@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(value = "/transaction")
+@RequestMapping(value = "/api/v1/transaction")
 public class TransactionController {
 
     @Autowired
